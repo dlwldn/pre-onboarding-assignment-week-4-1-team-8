@@ -20,7 +20,7 @@ function LoginForm() {
     {
       enabled: formData.email !== '' && formData.password !== '',
       onSuccess: (data) => {
-        storage.set(storageKey.token, data.accessToken);
+        storage.set(storageKey.TOKEN, data.accessToken);
         navigate(ACCOUNT_PAGE_PATHNAME);
       },
       onError: () => {
@@ -30,7 +30,7 @@ function LoginForm() {
   );
 
   useEffect(() => {
-    storage.get(storageKey.token) && navigate(ACCOUNT_PAGE_PATHNAME);
+    storage.get(storageKey.TOKEN) && navigate(ACCOUNT_PAGE_PATHNAME);
   }, []);
 
   const handleSubmitForm = (values) => {

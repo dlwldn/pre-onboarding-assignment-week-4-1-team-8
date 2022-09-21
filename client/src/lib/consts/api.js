@@ -7,3 +7,4 @@ export const HTTP_METHODS = {
 }
 
 export const LOGIN_URL = '/login';
+export const ACCOUNT_URL = '/accounts';

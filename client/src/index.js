@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import App from './App';
-import 'antd/dist/antd.css'
 import GlobalStyle from './styles/GlobalStyle';
+import 'antd/dist/antd.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {

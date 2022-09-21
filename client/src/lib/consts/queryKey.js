@@ -1,3 +1,4 @@
 export const queryKey = {
-  login: 'login',
+  LOGIN: 'LOGIN',
+  ACCOUNT: 'ACCOUNT'
 };

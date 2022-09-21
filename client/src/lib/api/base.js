@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { HTTP_METHODS } from '../consts';
+import storageKey from '../consts/storageKey';
+import storage from '../util/storage';
 
 const customAxios = axios.create({});
 
@@ -7,7 +9,7 @@ const createApi = (axiosInstance, methodType) => (config) => {
   return axiosInstance({
     method: methodType,
     headers: {
-      Authorization: ``,
+      Authorization: `Bearer ${storage.get(storageKey.TOKEN, '')}`,
     },
     ...config,
   });
