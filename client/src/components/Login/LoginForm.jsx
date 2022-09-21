@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useLoginQuery } from '../../hooks';
+import { ACCOUNT_PAGE_PATHNAME } from '../../lib/consts/pagePath';
 import color from '../../styles/color';
 import storage from '../../lib/util/storage';
 import storageKey from '../../lib/consts/storageKey';
@@ -20,16 +21,16 @@ function LoginForm() {
       enabled: formData.email !== '' && formData.password !== '',
       onSuccess: (data) => {
         storage.set(storageKey.token, data.accessToken);
-        navigate('/user');
+        navigate(ACCOUNT_PAGE_PATHNAME);
       },
       onError: () => {
-        alert('로그인에 실패하였습니다.');
+        message.error('로그인에 실패하였습니다.');
       },
     }
   );
 
   useEffect(() => {
-    storage.get(storageKey.token) && navigate('/user');
+    storage.get(storageKey.token) && navigate(ACCOUNT_PAGE_PATHNAME);
   }, []);
 
   const handleSubmitForm = (values) => {
