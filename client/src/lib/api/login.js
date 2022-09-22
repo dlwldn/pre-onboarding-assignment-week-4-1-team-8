@@ -8,7 +8,7 @@ export const login = async ({ email, password }) => {
       email,
       password,
     },
-    headers: {}
+    headers: {},
   });
 
   return response.data;

@@ -1,3 +1,6 @@
 export const queryKey = {
-  login: 'login',
+  LOGIN: 'LOGIN',
+  ACCOUNT: 'ACCOUNT',
+  ACCOUNT_DETAIL: 'ACCOUNT_DETAIL',
+  USER: 'USER',
 };
