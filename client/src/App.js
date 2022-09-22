@@ -7,8 +7,9 @@ import {
   HOME_PAGE_PATHNAME,
   LOGIN_PAGE_PATHNAME,
   USER_PAGE_PATHNAME,
+  USER_DETAIL_PAGE_PATHNAME
 } from './lib/consts/pagePath';
-import { Account, AccountDetail, Home, Login, User } from './pages';
+import { Account, AccountDetail, Home, Login, User, UserDetail } from './pages';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             element={<AccountDetail />}
           />
           <Route path={USER_PAGE_PATHNAME} element={<User />} />
+          <Route path={USER_DETAIL_PAGE_PATHNAME} element={<UserDetail />} />
         </Route>
         <Route path="/*" element={<div>404 Not Found</div>} />
       </Routes>

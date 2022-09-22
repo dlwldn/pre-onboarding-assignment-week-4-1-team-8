@@ -14,6 +14,14 @@ export const getUsers = async ({ page, limit, keyword }) => {
   return response.data;
 }
 
+export const getUserDetail = async ({ id }) => {
+  const response = await http.get({
+    url: `${USER_URL}/${id}`,
+  });
+
+  return response.data;
+}
+
 export const getUserSetting = async ({ page, limit }) => {
   const response = await http.get({
     url: USER_SETTING_URL,
@@ -25,3 +33,4 @@ export const getUserSetting = async ({ page, limit }) => {
 
   return response.data;
 }
+

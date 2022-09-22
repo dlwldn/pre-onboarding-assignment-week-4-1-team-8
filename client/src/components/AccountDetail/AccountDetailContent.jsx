@@ -8,6 +8,7 @@ import {
   DEFAULT_PAGE_LIMIT_COUNT,
   DEFAULT_PAGE_NUMBER,
   getChangedDate,
+  getChangedMaskingAccount,
 } from '../../lib';
 import { Button, Descriptions } from 'antd';
 import styled from 'styled-components';
@@ -50,7 +51,7 @@ function AccountDetailContent() {
               );
             }
           ),
-          number: number.replace(/(?<=.{2})(?=.{3})./gi, '*'),
+          number: getChangedMaskingAccount(number),
           assets: Number(parseInt(assets)).toLocaleString(),
           payments: Number(parseInt(payments)).toLocaleString(),
           isActive: is_active ? '활성' : '비활성',

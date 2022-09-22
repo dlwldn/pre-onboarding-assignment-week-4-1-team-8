@@ -1,4 +1,5 @@
 export const getChangedDate = (date, delimeter = '-', options) => {
+  if (!date) return '-';
   const targetDate = new Date(date);
   const year = targetDate.getFullYear();
   const month = String(targetDate.getMonth() + 1).padStart(2, '0');
@@ -13,4 +14,14 @@ export const getChangedDate = (date, delimeter = '-', options) => {
         options?.timeDelimeter ? options?.timeDelimeter : ':'
       )}`
     : [year, month, day].join(delimeter);
+};
+
+export const getChangedMaskingAccount = (account) => {
+  const accountRegex = /(?<=.{2})(?=.{3})./gi;
+  return account ? account.replace(accountRegex, '*') : '-';
+};
+
+export const getChangedMaskingPhoneNumber = (phoneNumber) => {
+  const phoneRegex = /(?<=.{4})(?=.{6})./gi;
+  return phoneNumber ? phoneNumber.replace(phoneRegex, '*') : '-';
 };

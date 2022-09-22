@@ -2,7 +2,7 @@ import { Table, Tag } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCustomRouter } from '../../hooks';
-import { getChangedDate } from '../../lib';
+import { getChangedDate, getChangedMaskingPhoneNumber } from '../../lib';
 
 const columns = [
   {
@@ -30,6 +30,7 @@ const columns = [
   {
     title: '휴대폰 번호',
     dataIndex: 'phoneNumber',
+    render: (text) => getChangedMaskingPhoneNumber(text),
   },
   {
     title: '최근 로그인',
@@ -43,6 +44,24 @@ const columns = [
     render: (text) => (text ? 'O' : 'X'),
   },
   {
+    title: '임직원 계좌 여부',
+    dataIndex: 'isStaff',
+    render: (text) => (text ? 'O' : 'X'),
+    filters: [
+      {
+        text: 'O',
+        value: true,
+      },
+      {
+        text: 'X',
+        value: false,
+      },
+    ],
+    onFilter: (value, record) => {
+      return value === record.isStaff;
+    },
+  },
+  {
     title: '활성화 여부',
     dataIndex: 'isActive',
     render: (text) => (
@@ -50,6 +69,19 @@ const columns = [
         {text ? '활성' : '비활성'}
       </Tag>
     ),
+    filters: [
+      {
+        text: '활성',
+        value: true,
+      },
+      {
+        text: '비활성',
+        value: false,
+      },
+    ],
+    onFilter: (value, record) => {
+      return value === record.isActive;
+    },
   },
   {
     title: '가입일',
@@ -83,6 +115,7 @@ function UserTable({ users, accounts, userSettings, loading }) {
         ?.allow_marketing_push,
       isActive: userSettings.find((setting) => setting.uuid === uuid)
         ?.is_active,
+      isStaff: userSettings.find((setting) => setting.uuid === uuid)?.is_staff,
       email: email,
       genderOrigin: gender_origin,
       birthDate: birth_date,

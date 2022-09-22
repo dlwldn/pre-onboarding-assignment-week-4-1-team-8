@@ -2,8 +2,8 @@ import React from 'react';
 import { Table, Tag } from 'antd';
 import BROKERS from '../../lib/db/brokers.json';
 import ACCOUNT_STATUS from '../../lib/db/accountStatus.json';
-import { useNavigate, Link } from 'react-router-dom';
-import { getChangedDate } from '../../lib';
+import { Link } from 'react-router-dom';
+import { getChangedDate, getChangedMaskingAccount } from '../../lib';
 import styled from 'styled-components';
 import color from '../../styles/color';
 import { useCustomRouter } from '../../hooks';
@@ -14,12 +14,7 @@ const columns = [
     title: '고객명',
     dataIndex: 'userName',
     render: (text, record) => (
-      <Link
-        to={`/user/${text}`}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
+      <Link to={`/user/${text}`}>
         {record.users.find((user) => user.id === text).name}
       </Link>
     ),
@@ -41,9 +36,10 @@ const columns = [
   {
     title: '계좌번호',
     dataIndex: 'number',
-    render: (text) => {
-      const maskingRegex = /(?<=.{2})(?=.{3})./gi;
-      return text.replace(maskingRegex, '*');
+    render: (text, record) => {
+      return (
+        <Link to={String(record.id)}>{getChangedMaskingAccount(text)}</Link>
+      );
     },
   },
   {
@@ -119,7 +115,6 @@ const columns = [
 ];
 
 function AccountTable({ accounts, users, loading }) {
-  const navigate = useNavigate();
   const {
     changeParams,
     currentParams: { page },
@@ -170,13 +165,6 @@ function AccountTable({ accounts, users, loading }) {
         showSizeChanger: false,
         current: Number(page),
         onChange: handleClickPageButton,
-      }}
-      onRow={(record) => {
-        return {
-          onClick: () => {
-            navigate(String(record.id));
-          },
-        };
       }}
     />
   );
