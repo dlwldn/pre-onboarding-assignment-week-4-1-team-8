@@ -1,19 +1,31 @@
 import React from 'react';
-import { useAccountQuery } from '../../hooks';
+import { useAccountQuery, useUserQuery } from '../../hooks';
+import { DEFAULT_PAGE_LIMIT_COUNT, DEFAULT_PAGE_NUMBER } from '../../lib';
 import AccountTable from './AccountTable';
 
-const DEFAULT_PAGE_NUMBER = 1;
-const DEFAULT_PAGE_LIMIT_COUNT = 9999;
 
 function AccountContent() {
-  const { data: accounts } = useAccountQuery({
+  const { data: users } = useUserQuery({
     page: DEFAULT_PAGE_NUMBER,
     limit: DEFAULT_PAGE_LIMIT_COUNT,
   });
+  const { data: accounts, isFetching } = useAccountQuery(
+    {
+      page: DEFAULT_PAGE_NUMBER,
+      limit: DEFAULT_PAGE_LIMIT_COUNT,
+    },
+    {
+      enabled: Boolean(users),
+    }
+  );
 
   return (
     <div>
-      <AccountTable accounts={accounts ? accounts : []} />
+      <AccountTable
+        accounts={accounts ? accounts : []}
+        users={users ? users : []}
+        loading={isFetching}
+      />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import {
+  ACCOUNT_PAGE_PARAMS,
   ACCOUNT_PAGE_PATHNAME,
   LOGIN_PAGE_PATHNAME,
   USER_PAGE_PATHNAME,
@@ -15,6 +16,7 @@ import {
 import storage from '../../lib/util/storage';
 import storageKey from '../../lib/consts/storageKey';
 import color from '../../styles/color';
+import Avatar from 'antd/lib/avatar/avatar';
 
 const { Header, Footer, Sider, Content } = Layout;
 const MENU_KEYS = ['1', '2', '3'];
@@ -59,7 +61,7 @@ function PageLayout({ children }) {
   const handleClickMenuItem = (menu) => {
     switch (menu.key) {
       case MENU_KEYS[0]:
-        navigate(ACCOUNT_PAGE_PATHNAME);
+        navigate(`${ACCOUNT_PAGE_PATHNAME}${ACCOUNT_PAGE_PARAMS}`);
         setHeaderTitle(MENU_LABELS[0]);
         break;
       case MENU_KEYS[1]:
@@ -91,7 +93,9 @@ function PageLayout({ children }) {
       <Layout>
         <HeaderWrapper>
           <span>#{headerTitle}</span>
-          <div>유저로고</div>
+          <div>
+            <Avatar icon={<UserOutlined />} />
+          </div>
         </HeaderWrapper>
         <ContentWrapper>{children || <Outlet />}</ContentWrapper>
         <FooterWrapper>Copyright © December and Company Inc.</FooterWrapper>

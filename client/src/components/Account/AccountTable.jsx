@@ -1,15 +1,27 @@
+import React from 'react';
 import { Table, Tag } from 'antd';
 import BROKERS from '../../lib/db/brokers.json';
 import ACCOUNT_STATUS from '../../lib/db/accountStatus.json';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getChangedDate } from '../../lib';
+import styled from 'styled-components';
+import color from '../../styles/color';
+import { useCustomRouter } from '../../hooks';
 
-const COLUMNS = [
+const columns = [
   {
     title: '고객명',
     dataIndex: 'userName',
-    render: (text, record) => <Link to={`${record.userName}`}>{text}</Link>,
+    render: (text, record) => (
+      <Link
+        to={`/user/${text}`}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        {record.users.find((user) => user.id === text).name}
+      </Link>
+    ),
   },
   {
     title: '브로커명',
@@ -18,10 +30,11 @@ const COLUMNS = [
     filters: Object.values(BROKERS).map((broker, brokerIndex) => {
       return {
         text: broker,
-        value: Object.keys(BROKERS)[brokerIndex]
-      }
+        value: Object.keys(BROKERS)[brokerIndex],
+      };
     }),
     onFilter: (value, record) => {
+      console.info(value);
       return value === record.brokerName;
     },
   },
@@ -29,7 +42,7 @@ const COLUMNS = [
     title: '계좌번호',
     dataIndex: 'number',
     render: (text) => {
-      const maskingRegex = /(?<=.{2})./gi;
+      const maskingRegex = /(?<=.{2})(?=.{3})./gi;
       return text.replace(maskingRegex, '*');
     },
   },
@@ -45,8 +58,8 @@ const COLUMNS = [
     filters: Object.keys(ACCOUNT_STATUS).map((status, statusIndex) => {
       return {
         text: status,
-        value: Object.values(ACCOUNT_STATUS)[statusIndex]
-      }
+        value: Object.values(ACCOUNT_STATUS)[statusIndex],
+      };
     }),
     onFilter: (value, record) => {
       return value === record.status;
@@ -56,7 +69,21 @@ const COLUMNS = [
   {
     title: '평가금액',
     dataIndex: 'assets',
-    render: (text) => Number(parseInt(text)).toLocaleString(),
+    render: (text, record) => {
+      return (
+        <NumberSpan
+          status={
+            text === record.payments
+              ? 'equal'
+              : text > record.payments
+              ? 'over'
+              : 'less'
+          }
+        >
+          {Number(parseInt(text)).toLocaleString()}
+        </NumberSpan>
+      );
+    },
   },
   {
     title: '입금금액',
@@ -67,7 +94,9 @@ const COLUMNS = [
     title: '계좌활성여부',
     dataIndex: 'isActive',
     render: (text) => (
-      <Tag color={`${text ? 'blue' : 'red'}`}>{text ? '활성' : '비활성'}</Tag>
+      <Tag color={`${text ? 'green' : 'default'}`}>
+        {text ? '활성' : '비활성'}
+      </Tag>
     ),
     filters: [
       {
@@ -90,9 +119,16 @@ const COLUMNS = [
   },
 ];
 
-function AccountTable({ accounts }) {
+function AccountTable({ accounts, users, loading }) {
+  const navigate = useNavigate();
+  const {
+    changeParams,
+    currentParams: { page },
+  } = useCustomRouter();
+
   const accountList = accounts.map((account) => {
     const {
+      id,
       user_id,
       broker_id,
       uuid,
@@ -115,15 +151,45 @@ function AccountTable({ accounts }) {
       number,
       assets,
       payments,
+      users,
+      id,
     };
   });
+
+  const handleClickPageButton = (page) => {
+    changeParams({ page });
+  };
+
   return (
     <Table
-      columns={COLUMNS}
+      columns={columns}
       dataSource={accountList}
-      pagination={{ pageSize: 15, style: { justifyContent: 'center' } }}
+      loading={loading}
+      pagination={{
+        pageSize: 15,
+        style: { justifyContent: 'center' },
+        showSizeChanger: false,
+        current: Number(page),
+        onChange: handleClickPageButton,
+      }}
+      onRow={(record) => {
+        return {
+          onClick: () => {
+            navigate(String(record.id));
+          },
+        };
+      }}
     />
   );
 }
 
 export default AccountTable;
+
+const NumberSpan = styled.span`
+  color: ${({ status }) =>
+    status === 'equal'
+      ? color.black
+      : status === 'over'
+      ? color.red1
+      : color.blue1};
+`;

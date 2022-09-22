@@ -1,13 +1,13 @@
 import { useQuery } from 'react-query';
 import { queryKey } from '../../lib';
-import { getAccount } from '../../lib/api/account';
+import { getAccountDetail } from '../../lib/api/account';
 import useErrorApi from './useErrorApi';
 
-function useAccountQuery({ page, limit, keyword }, option) {
+function useAccountDetailQuery({ id }, option) {
   const { handleErrorAuth } = useErrorApi();
   return useQuery(
-    [queryKey.ACCOUNT, page, limit],
-    () => getAccount({ page, limit, keyword }),
+    [queryKey.ACCOUNT_DETAIL, id],
+    () => getAccountDetail({ id }),
     {
       onError: (error) => {
         handleErrorAuth(error);
@@ -17,4 +17,4 @@ function useAccountQuery({ page, limit, keyword }, option) {
   );
 }
 
-export default useAccountQuery;
+export default useAccountDetailQuery;
