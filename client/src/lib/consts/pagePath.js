@@ -6,3 +6,4 @@ export const USER_PAGE_PATHNAME = '/user';
 export const USER_DETAIL_PAGE_PATHNAME = '/user/:id';
 
 export const ACCOUNT_PAGE_PARAMS = '?page=1';
+export const USER_PAGE_PARAMS = '?page=1';

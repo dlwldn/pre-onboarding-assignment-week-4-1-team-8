@@ -11,6 +11,7 @@ import {
   ACCOUNT_PAGE_PARAMS,
   ACCOUNT_PAGE_PATHNAME,
   LOGIN_PAGE_PATHNAME,
+  USER_PAGE_PARAMS,
   USER_PAGE_PATHNAME,
 } from '../../lib/consts/pagePath';
 import storage from '../../lib/util/storage';
@@ -65,7 +66,7 @@ function PageLayout({ children }) {
         setHeaderTitle(MENU_LABELS[0]);
         break;
       case MENU_KEYS[1]:
-        navigate(USER_PAGE_PATHNAME);
+        navigate(`${USER_PAGE_PATHNAME}${USER_PAGE_PARAMS}`);
         setHeaderTitle(MENU_LABELS[1]);
         break;
       case MENU_KEYS[2]:
@@ -73,8 +74,7 @@ function PageLayout({ children }) {
         navigate(LOGIN_PAGE_PATHNAME);
         break;
       default:
-        navigate(ACCOUNT_PAGE_PATHNAME);
-        setHeaderTitle(MENU_LABELS[0]);
+        break;
     }
   };
 
@@ -118,7 +118,7 @@ const HeaderWrapper = styled(Header)`
 `;
 const ContentWrapper = styled(Content)`
   padding: 10px;
-`
+`;
 const FooterWrapper = styled(Footer)`
   text-align: center;
 `;
