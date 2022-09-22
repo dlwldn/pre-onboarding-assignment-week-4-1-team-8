@@ -9,6 +9,7 @@ import color from '../../styles/color';
 import { useCustomRouter } from '../../hooks';
 
 const columns = [
+  { title: '계좌명', dataIndex: 'name' },
   {
     title: '고객명',
     dataIndex: 'userName',
@@ -34,7 +35,6 @@ const columns = [
       };
     }),
     onFilter: (value, record) => {
-      console.info(value);
       return value === record.brokerName;
     },
   },
@@ -65,7 +65,6 @@ const columns = [
       return value === record.status;
     },
   },
-  { title: '계좌명', dataIndex: 'name' },
   {
     title: '평가금액',
     dataIndex: 'assets',

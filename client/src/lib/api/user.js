@@ -1,4 +1,4 @@
-import { USER_URL } from "../consts";
+import { USER_SETTING_URL, USER_URL } from "../consts";
 import http from "./base";
 
 export const getUsers = async ({ page, limit, keyword }) => {
@@ -8,6 +8,18 @@ export const getUsers = async ({ page, limit, keyword }) => {
       _page: page,
       _limit: limit,
       q: keyword
+    }
+  });
+
+  return response.data;
+}
+
+export const getUserSetting = async ({ page, limit }) => {
+  const response = await http.get({
+    url: USER_SETTING_URL,
+    params: {
+      _page: page,
+      _limit: limit,
     }
   });
 

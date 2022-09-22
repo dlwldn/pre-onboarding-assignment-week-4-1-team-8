@@ -12,3 +12,4 @@ export const DEFAULT_PAGE_LIMIT_COUNT = 9999;
 export const LOGIN_URL = '/login';
 export const ACCOUNT_URL = '/accounts';
 export const USER_URL = '/users';
+export const USER_SETTING_URL = '/userSetting';
