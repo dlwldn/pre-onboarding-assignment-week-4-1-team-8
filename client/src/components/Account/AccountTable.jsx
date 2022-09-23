@@ -1,4 +1,6 @@
-import React from 'react';
+/* eslint-disable */
+
+import React, { useRef, useState } from 'react';
 import { Table, Tag } from 'antd';
 import BROKERS from '../../lib/db/brokers.json';
 import ACCOUNT_STATUS from '../../lib/db/accountStatus.json';
@@ -7,6 +9,8 @@ import { getChangedDate, getChangedMaskingAccount } from '../../lib';
 import styled from 'styled-components';
 import color from '../../styles/color';
 import { useCustomRouter } from '../../hooks';
+import axios from 'axios';
+import { searchAccount } from '../../lib/api/account';
 
 const columns = [
   { title: '계좌명', dataIndex: 'name' },
@@ -120,6 +124,10 @@ function AccountTable({ accounts, users, loading }) {
     currentParams: { page },
   } = useCustomRouter();
 
+  const [searchedAccounts, setSearchedAccounts] = useState([]);
+  const [isSearched, setIsSearched] = useState(false);
+  const inputRef = useRef();
+
   const accountList = accounts.map((account) => {
     const {
       id,
@@ -154,19 +162,77 @@ function AccountTable({ accounts, users, loading }) {
     changeParams({ page });
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (inputRef.current.value === '') return;
+
+    const fetch = async () => {
+      const result = await searchAccount(inputRef.current.value);
+      const newAccountList = result.map((account) => {
+        const {
+          id,
+          user_id,
+          broker_id,
+          uuid,
+          name,
+          created_at,
+          number,
+          status,
+          assets,
+          payments,
+          is_active,
+        } = account;
+        return {
+          key: uuid,
+          userName: user_id,
+          brokerName: broker_id,
+          createdAt: created_at,
+          isActive: is_active,
+          status,
+          name,
+          number,
+          assets,
+          payments,
+          users,
+          id,
+        };
+      });
+
+      setSearchedAccounts(newAccountList);
+    };
+
+    fetch();
+    setIsSearched(true);
+  };
+
   return (
-    <Table
-      columns={columns}
-      dataSource={accountList}
-      loading={loading}
-      pagination={{
-        pageSize: 15,
-        style: { justifyContent: 'center' },
-        showSizeChanger: false,
-        current: Number(page),
-        onChange: handleClickPageButton,
-      }}
-    />
+    <>
+      <Form onSubmit={(event) => handleSubmit(event)}>
+        <Input ref={inputRef} />
+        <Button type="submit">검색</Button>
+      </Form>
+      {isSearched ? (
+        <Table
+          columns={columns}
+          dataSource={searchedAccounts}
+          loading={loading}
+        />
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={accountList}
+          loading={loading}
+          pagination={{
+            pageSize: 15,
+            style: { justifyContent: 'center' },
+            showSizeChanger: false,
+            current: Number(page),
+            onChange: handleClickPageButton,
+          }}
+        />
+      )}
+    </>
   );
 }
 
@@ -179,4 +245,31 @@ const NumberSpan = styled.span`
       : status === 'over'
       ? color.red1
       : color.blue1};
+`;
+
+const Form = styled.form`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Input = styled.input`
+  all: unset;
+  height: 24px;
+  background-color: ${color.white};
+  border: 1px solid ${color.gray3};
+  margin: 4px;
+  border-radius: 4px;
+`;
+
+const Button = styled.button`
+  all: unset;
+  cursor: pointer;
+  background-color: ${color.white};
+  border: 1px solid ${color.black};
+  border-radius: 4px;
+  height: 24px;
+  line-height: 24px;
+  width: 36px;
+  text-align: center;
 `;
