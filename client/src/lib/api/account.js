@@ -21,3 +21,14 @@ export const getAccountDetail = async ({ id }) => {
 
   return response.data;
 }
+
+export const searchAccount = async enteredText => {
+  const response = await http.get({
+    url: ACCOUNT_URL,
+    params: {
+      q: enteredText
+    }
+  })
+  
+  return response.data;
+}
